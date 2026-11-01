@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حاسبة العمر</title>
+<style>
+:root{--bg:#F2F6F6;--card:#FFFFFF;--field:#EFF4F4;--line:#DCE7E7;--ink:#12262B;--mut:#5D7379;--teal:#0B5563;--teal2:#0E7C74;--r:18px}
+body.dark{--bg:#0D1517;--card:#162226;--field:#1D2D31;--line:#2A3E42;--ink:#EAF3F3;--mut:#93A8AD}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:"Segoe UI",Tahoma,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:0 14px 60px;max-width:560px;margin:0 auto}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(135deg,#0B5563,#0E7C74);color:#fff;border-radius:0 0 22px 22px;padding:20px 18px 16px;margin:0 -14px 16px;box-shadow:0 8px 24px rgba(11,85,99,.28)}
+header .t{font-size:23px;font-weight:800;display:flex;align-items:center;justify-content:space-between}
+header .d{opacity:.88;font-size:13px;margin-top:5px;line-height:1.7}
+.iconbtn{background:rgba(255,255,255,.16);border:none;color:#fff;width:42px;height:42px;border-radius:13px;font-size:19px;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:17px 16px;margin-bottom:14px;box-shadow:0 3px 14px rgba(18,38,43,.06)}
+.sec{font-size:17px;font-weight:800;margin-bottom:11px}
+.mut{color:var(--mut);font-size:12.5px;line-height:1.8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid2>*{min-width:0}
+label{display:block;font-size:12.5px;font-weight:700;color:var(--mut);margin-bottom:5px}
+input{width:100%;height:50px;border:1.5px solid var(--line);background:var(--field);color:var(--ink);border-radius:14px;padding:0 13px;font-size:15px;font-family:inherit;outline:none}
+input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(14,124,116,.15)}
+.btn{width:100%;min-height:52px;margin-top:13px;border:none;border-radius:15px;background:linear-gradient(135deg,#0B5563,#0E7C74);color:#fff;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 16px rgba(11,85,99,.25)}
+.btn.ghost{background:var(--field);color:var(--ink);box-shadow:none;border:1.5px solid var(--line)}
+.ageHero{background:linear-gradient(135deg,#0B5563,#0E7C74 55%,#12A594);color:#fff;border-radius:18px;padding:24px 16px;text-align:center;margin-bottom:13px;box-shadow:0 10px 26px rgba(11,85,99,.3)}
+.ageHero .big{font-size:50px;font-weight:800;line-height:1.15}
+.ageTiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.ageTile{background:var(--field);border:1px solid var(--line);border-radius:14px;padding:12px 4px;text-align:center}
+.ageTile b{display:block;font-size:16.5px;margin-bottom:2px}
+.ageTile span{font-size:11px;color:var(--mut);font-weight:700}
+.tx{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.tx:last-child{border-bottom:none}
+.mid{flex:1;min-width:0}
+.nm{font-size:14.5px;font-weight:700}
+.ds{font-size:12px;color:var(--mut);margin-top:2px}
+.am{font-size:14px;font-weight:800;white-space:nowrap}
+.progress{height:11px;background:var(--field);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin-top:7px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,#0E7C74,#12A594);border-radius:99px}
+footer{text-align:center;color:var(--mut);font-size:12px;line-height:2;padding:8px 0}
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:#12262B;color:#fff;padding:11px 20px;border-radius:99px;font-size:14px;font-weight:700;opacity:0;transition:.3s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:88vw;text-align:center}
+#toast.on{transform:translateX(-50%);opacity:1}
+.empty{text-align:center;padding:22px 8px;color:var(--mut);line-height:2}
+.empty .e{font-size:44px}
+</style>
+</head>
+<body>
+<header>
+  <div class="t"><span>🎂 حاسبة العمر</span><button class="iconbtn" id="darkBtn">🌙</button></div>
+  <div class="d" id="dateLine"></div>
+</header>
+
+<div class="card">
+  <h2 class="sec">📝 تاريخ ميلادك</h2>
+  <div class="grid2">
+    <div><label>تاريخ الميلاد</label><input type="date" id="ageDate"></div>
+    <div><label>وقت الولادة (اختياري)</label><input type="time" id="ageTime"></div>
+  </div>
+  <button class="btn" id="ageSave">✨ احسب عمري بالكامل</button>
+  <p class="mut">وقت الولادة يزيد دقة عدّاد الثواني. كل الحسابات فورية على هاتفك، وبياناتك لا تغادر جهازك أبدًا — التطبيق يعمل بالكامل دون إنترنت.</p>
+</div>
+
+<div id="results"></div>
+
+<footer>حاسبة العمر — الإصدار 1.0<br>صُنع بدقة ليُظهر لك حياتك بالأرقام 🌟</footer>
+<div id="toast"></div>
+
+<script>
+const KEY='ageApp.v1';
+const $=id=>document.getElementById(id);
+let S={birth:null,dark:false};
+try{const r=JSON.parse(localStorage.getItem(KEY));if(r)S=Object.assign(S,r)}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function anum(n){return new Intl.NumberFormat('ar').format(Math.floor(n))}
+let toastT=null;
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)}
+function zodiacOf(m,d){const Z=[[1,19,'الجدي ♑','الدلو ♒'],[2,18,'الدلو ♒','الحوت ♓'],[3,20,'الحوت ♓','الحمل ♈'],[4,19,'الحمل ♈','الثور ♉'],[5,20,'الثور ♉','الجوزاء ♊'],[6,21,'الجوزاء ♊','السرطان ♋'],[7,22,'السرطان ♋','الأسد ♌'],[8,22,'الأسد ♌','العذراء ♍'],[9,22,'العذراء ♍','الميزان ♎'],[10,23,'الميزان ♎','العقرب ♏'],[11,22,'العقرب ♏','القوس ♐'],[12,21,'القوس ♐','الجدي ♑']];const z=Z[m-1];return d<z[1]?z[2]:z[3]}
+function chineseOf(y){const A=['القرد 🐵','الديك 🐓','الكلب 🐕','الخنزير 🐖','الفأر 🐀','الثور 🐂','النمر 🐅','الأرنب 🐇','التنين 🐉','الأفعى 🐍','الحصان 🐎','العنزة 🐐'];return A[y%12]}
+function generationOf(y){if(y<1946)return 'الجيل الصامت';if(y<1965)return 'جيل الطفرة (Boomers)';if(y<1981)return 'الجيل X';if(y<1997)return 'جيل الألفية (Millennials)';if(y<2013)return 'الجيل Z';if(y<2025)return 'جيل ألفا';return 'جيل بيتا'}
+function seasonOf(m){return m===12||m<=2?'الشتاء ❄️':m<=5?'الربيع 🌸':m<=8?'الصيف ☀️':'الخريف 🍂'}
+function ageCalc(){const b=S.birth;if(!b||!b.date)return null;const P=b.date.split('-').map(Number);if(P.length<3)return null;const T=(b.time||'00:00').split(':').map(Number);const bd=new Date(P[0],P[1]-1,P[2],T[0]||0,T[1]||0);const now=new Date();if(isNaN(bd.getTime())||bd>now)return null;
+ let y=now.getFullYear()-P[0],mo=now.getMonth()-(P[1]-1),d=now.getDate()-P[2];
+ if(d<0){mo--;d+=new Date(now.getFullYear(),now.getMonth(),0).getDate()}
+ if(mo<0){y--;mo+=12}
+ const ms=now-bd,days=Math.floor(ms/864e5);
+ let nb=new Date(now.getFullYear(),P[1]-1,P[2]);const today0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ if(nb<today0)nb=new Date(now.getFullYear()+1,P[1]-1,P[2]);
+ const daysToNB=Math.round((nb-today0)/864e5);const lastB=new Date(nb.getFullYear()-1,P[1]-1,P[2]);
+ const yearPct=Math.min(100,Math.max(0,(today0-lastB)/(nb-lastB)*100));
+ return{bd,P,y,mo,d,days,hours:Math.floor(ms/36e5),mins:Math.floor(ms/6e4),secs:Math.floor(ms/1e3),nb,daysToNB,yearPct,turnAge:nb.getFullYear()-P[0]}}
+function ageMilestones(a){const bd=a.bd;const L=[];const add=(label,date)=>L.push({label,date,done:date<=new Date()});
+ add('١٬٠٠٠ أسبوع من الحياة',new Date(bd.getTime()+7000*864e5));
+ add('١٠٬٠٠٠ يوم من الحياة',new Date(bd.getTime()+10000*864e5));
+ add('٥٠٠ شهر من الحياة',new Date(bd.getFullYear(),bd.getMonth()+500,bd.getDate()));
+ add('١ مليار ثانية من الحياة',new Date(bd.getTime()+1e9*1000));
+ add('عيد الميلاد الـ ٢٥',new Date(bd.getFullYear()+25,bd.getMonth(),bd.getDate()));
+ add('عيد الميلاد الـ ٥٠',new Date(bd.getFullYear()+50,bd.getMonth(),bd.getDate()));
+ add('٢٥٬٠٠٠ يوم من الحياة',new Date(bd.getTime()+25000*864e5));
+ add('عيد الميلاد الـ ٧٥',new Date(bd.getFullYear()+75,bd.getMonth(),bd.getDate()));
+ return L.sort((x,y2)=>x.date-y2.date)}
+function dstr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+let ageTimer=null;
+function render(){const box=$('results');const a=ageCalc();
+ if(ageTimer){clearInterval(ageTimer);ageTimer=null}
+ if(!a){box.innerHTML='<div class="card"><div class="empty"><div class="e">🎂</div>اكتب تاريخ ميلادك بالأعلى واضغط «احسب عمري بالكامل»<br>وستظهر هنا لوحة حياتك كاملة: عمرك الدقيق بالسنوات والأشهر والأيام والثواني الحية، ويوم ميلادك وتاريخه الهجري، وبرجك، ومحطات عمرك، وعمرك على الكواكب.</div></div>';return}
+ const wd=a.bd.toLocaleDateString('ar',{weekday:'long'});
+ let hijri='';try{hijri=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(a.bd)}catch(e){try{hijri=new Intl.DateTimeFormat('ar-SA-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'}).format(a.bd)}catch(e2){}}
+ const tile=(v,l)=>'<div class="ageTile"><b>'+v+'</b><span>'+l+'</span></div>';
+ const row=(ic,t,v)=>'<div class="tx"><div class="mid"><div class="nm">'+ic+' '+t+'</div></div><div class="am">'+v+'</div></div>';
+ const ms=ageMilestones(a);const passed=ms.filter(x=>x.done);const next=ms.filter(x=>!x.done).slice(0,4);
+ const planets=[['عطارد',88],['الزهرة',225],['المريخ',687],['المشتري',4333],['زحل',10759]];
+ const journey=Math.min(100,a.days/(76*365.25)*100);
+ box.innerHTML=
+ '<div class="ageHero"><div style="opacity:.85;font-weight:700">🎂 عمرك الآن</div><div class="big">'+anum(a.y)+' سنة</div><div style="font-size:17px;font-weight:700">'+anum(a.mo)+' شهرًا و '+anum(a.d)+' يومًا</div><div style="margin-top:7px;opacity:.92">⏱️ عشت حتى هذه اللحظة <b class="ageSecsLive">'+anum(a.secs)+'</b> ثانية</div></div>'
+ +'<div class="card"><h2 class="sec">📊 عمرك بالأرقام</h2><div class="ageTiles">'
+ +tile(anum(a.y*12+a.mo),'إجمالي الأشهر')+tile(anum(a.days/7),'إجمالي الأسابيع')+tile(anum(a.days),'إجمالي الأيام')
+ +tile(anum(a.hours),'إجمالي الساعات')+tile(anum(a.mins),'إجمالي الدقائق')+'<div class="ageTile"><b class="ageSecsLive">'+anum(a.secs)+'</b><span>إجمالي الثواني</span></div>'
+ +'</div></div>'
+ +'<div class="card"><h2 class="sec">🌟 تفاصيل ميلادك</h2>'
+ +row('📅','وُلدت يوم',wd)
+ +(hijri?row('🌙','تاريخ ميلادك بالهجري',hijri):'')
+ +row('⭐','برجك الفلكي',zodiacOf(a.P[1],a.P[2]))
+ +row('🐉','برجك الصيني',chineseOf(a.P[0]))
+ +row('👥','جيلك',generationOf(a.P[0]))
+ +row('🍂','فصل ميلادك',seasonOf(a.P[1]))
+ +'</div>'
+ +'<div class="card"><h2 class="sec">🎂 عيد ميلادك القادم</h2><div class="nm">بعد <b>'+anum(a.daysToNB)+'</b> يوم — '+dstr(a.nb)+' ('+a.nb.toLocaleDateString('ar',{weekday:'long'})+')</div><div class="ds">تتمّ فيه '+anum(a.turnAge)+' سنة بإذن الله</div><div class="progress"><i style="width:'+a.yearPct.toFixed(1)+'%"></i></div><div class="ds">انقضى '+a.yearPct.toFixed(1)+'٪ من سنتك الحالية</div></div>'
+ +'<div class="card"><h2 class="sec">🏁 محطات عمرك</h2>'
+ +(passed.length?'<div class="ds" style="margin-bottom:6px">✅ آخر محطة حققتها: '+passed[passed.length-1].label+' ('+dstr(passed[passed.length-1].date)+')</div>':'')
+ +next.map(x=>'<div class="tx"><div class="mid"><div class="nm">'+x.label+'</div><div class="ds">'+dstr(x.date)+'</div></div><div class="am" style="color:var(--teal2)">بعد '+anum(Math.ceil((x.date-new Date())/864e5))+' يوم</div></div>').join('')
+ +'</div>'
+ +'<div class="card"><h2 class="sec">🪐 عمرك على الكواكب</h2><div class="ageTiles">'
+ +planets.map(p=>tile((a.days/p[1]).toFixed(1)+' سنة',p[0])).join('')+tile((a.days/365.25).toFixed(1)+' سنة','الأرض 🌍')
+ +'</div></div>'
+ +'<div class="card"><h2 class="sec">🌍 رحلة العمر (تقدير إحصائي)</h2>'
+ +row('❤️','نبضات قلبك تقريبًا',anum(a.days*24*60*72)+' نبضة')
+ +row('🌬️','أنفاسك تقريبًا',anum(a.days*24*60*16)+' نفَس')
+ +row('😴','نومك حتى الآن',anum(a.days/3)+' يوم ≈ '+(a.days/3/365.25).toFixed(1)+' سنة')
+ +'<div class="progress"><i style="width:'+journey.toFixed(1)+'%"></i></div><div class="ds">قطعت نحو '+journey.toFixed(1)+'٪ من متوسط عمر الإنسان عالميًا (≈ ٧٦ سنة) — أرقام النبض والنفس تقديرية بافتراض معدلات متوسطة.</div>'
+ +'<button class="btn ghost" id="shareBtn">📤 مشاركة ملخص عمري</button></div>';
+ const sb=$('shareBtn');if(sb)sb.onclick=shareSummary;
+ ageTimer=setInterval(()=>{const n=ageCalc();if(!n)return;document.querySelectorAll('.ageSecsLive').forEach(e=>e.textContent=anum(n.secs))},1000)}
+function shareSummary(){const a=ageCalc();if(!a)return;
+ const txt='🎂 عمري بالتفصيل:\n• '+a.y+' سنة و '+a.mo+' شهرًا و '+a.d+' يومًا\n• عشت '+anum(a.days)+' يومًا و '+anum(a.secs)+' ثانية\n• برجي: '+zodiacOf(a.P[1],a.P[2])+' — وُلدت يوم '+a.bd.toLocaleDateString('ar',{weekday:'long'})+'\n• عيد ميلادي القادم بعد '+a.daysToNB+' يوم وأتمّ فيه '+a.turnAge+' سنة';
+ const done=()=>toast('📋 نُسخ ملخص عمرك — الصقه أين تشاء');
+ if(navigator.share){navigator.share({text:txt}).catch(()=>{})}
+ else{const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){toast('تعذّرت المشاركة')}ta.remove()}}
+$('ageSave').onclick=()=>{const d=$('ageDate').value;if(!d){toast('اختر تاريخ ميلادك أولًا');return}S.birth={date:d,time:$('ageTime').value||''};save();render();toast('🎂 هذه لوحة عمرك كاملة')};
+function applyDark(){document.body.classList.toggle('dark',!!S.dark);$('darkBtn').textContent=S.dark?'☀️':'🌙'}
+$('darkBtn').onclick=()=>{S.dark=!S.dark;save();applyDark()};
+function dateLine(){const n=new Date();let h='';try{h=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(n)}catch(e){}
+ $('dateLine').innerHTML='📅 '+n.toLocaleDateString('ar',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(h?'<br>🌙 '+h+' هـ':'')}
+if(S.birth){$('ageDate').value=S.birth.date||'';$('ageTime').value=S.birth.time||''}
+applyDark();dateLine();render();
+</script>
+</body>
+</html>
